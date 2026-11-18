@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HandCakes Mobile App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-bg: #FF6996;
+            --pink-light: #FF85AB;
+            --card-white: #FFFFFF;
+            --text-color: #4A4A4A;
+            --accent-pink: #FF407D;
+        }
+
+        body {
+            background-color: #1E1E24;
+            font-family: 'Quicksand', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-frame {
+            width: 375px;
+            height: 780px;
+            background-color: var(--pink-bg);
+            border-radius: 40px;
+            border: 10px solid #0E0E10;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-notch {
+            width: 150px;
+            height: 20px;
+            background-color: #0E0E10;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+            z-index: 1000;
+        }
+
+        .screen-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px 18px 20px 18px;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            position: relative;
+        }
+
+        .screen-container::-webkit-scrollbar { display: none; }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-title {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.3rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .header-icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .cart-badge-icon {
+            position: absolute;
+            top: 2px;
+            right: 0px;
+            background: white;
+            color: var(--pink-bg);
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .watermark-bg {
+            position: absolute;
+            top: 52%;
+            left: 42%;
+            transform: translate(-50%, -50%) rotate(-8deg);
+            width: 460px;
+            height: 460px;
+            opacity: 0.16;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .login-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-group label {
+            color: white;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            border: none;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .btn-action {
+            width: 100%;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 14px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-action:hover {
+            background-color: white;
+            color: var(--pink-bg);
+        }
+
+        .categories-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+
+        .categories-bar::-webkit-scrollbar { display: none; }
+
+        .category-chip {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .category-chip.active {
+            background: white;
+            color: var(--pink-bg);
+        }
+
+        .horizontal-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+
+        .horizontal-scroll::-webkit-scrollbar { display: none; }
+
+        .card-highlight {
+            min-width: 130px;
+            background: white;
+            border-radius: 18px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .card-highlight img { width: 70px; height: 70px; object-fit: contain; }
+
+        .product-card {
+            background-color: var(--card-white);
+            border-radius: 18px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .product-card-left { display: flex; align-items: center; gap: 12px; }
+        .product-card img { width: 65px; height: 65px; object-fit: contain; }
+        .product-info h4 { margin: 0 0 4px 0; color: var(--text-color); font-size: 0.95rem; }
+        .product-price { color: var(--accent-pink); font-weight: 700; font-size: 0.9rem; }
+
+        .btn-mini-add {
+            background: var(--pink-bg);
+            color: white;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 0;
+            padding: 0;
+        }
+
+        .image-frame-container {
+            background: white;
+            border-radius: 32px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 240px;
+            height: 240px;
+            margin: 15px auto;
+        }
+
+        .image-frame-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-qty {
+            background: #F0F0F0;
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--pink-bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-number {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--text-color);
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .payment-options {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .payment-chip {
+            flex: 1;
+            border: 2px solid #EEE;
+            border-radius: 12px;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-chip.active {
+            border-color: var(--pink-bg);
+            background: #FFE3EC;
+            color: var(--pink-bg);
+        }
+
+        .phone-modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .phone-modal-card {
+            background: white;
+            border-radius: 24px;
+            padding: 22px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+            animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .timeline { background: white; border-radius: 20px; padding: 18px; margin-top: 15px; }
+        .step { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; opacity: 0.4; }
+        .step.active { opacity: 1; }
+        .step-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--pink-bg); color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+
+        <div class="phone-modal" id="app-modal">
+            <div class="phone-modal-card">
+                <div id="modal-icon" style="font-size: 2.5rem; margin-bottom: 10px;">🧁</div>
+                <h3 id="modal-title" style="margin: 0 0 8px 0; color: var(--pink-bg);">Aviso</h3>
+                <p id="modal-msg" style="color: #666; font-size: 0.9rem; margin-bottom: 18px; line-height: 1.4;"></p>
+                <button class="btn-action" style="background: var(--pink-bg); color: white; margin: 0;" onclick="fecharModal()">OK</button>
+            </div>
+        </div>
+
+        <div class="screen-container">
+            <div class="app-header">
+                <button class="header-icon-btn" id="btn-menu" onclick="abrirConfiguracoes()" style="display: none;">☰</button>
+                <button class="header-icon-btn" id="btn-back" onclick="voltarNavegacao()" style="display: none;">←</button>
+                <h1 class="brand-title">HandCakes</h1>
+                <button class="header-icon-btn" id="btn-cart-header" onclick="abrirCarrinhoECheckout()" style="display: none;">
+                    🛒
+                    <span class="cart-badge-icon" id="cart-count-badge">0</span>
+                </button>
+                <div id="header-spacer" style="width: 25px;"></div>
+            </div>
+
+            <!-- TELA 1: LOGIN -->
+            <div id="screen-login" class="login-wrapper">
+                <svg class="watermark-bg" viewBox="0 0 500 500" fill="white">
+                    <rect x="50" y="210" width="75" height="14" rx="7" />
+                    <rect x="20" y="243" width="105" height="14" rx="7" />
+                    <rect x="65" y="276" width="60" height="14" rx="7" />
+                    <path d="M 285 75 C 265 45, 305 20, 320 42 C 335 20, 375 45, 355 75 C 335 105, 320 120, 320 120 C 320 120, 305 105, 285 75 Z" />
+                    <path d="M 230 180 C 210 205, 205 240, 220 260 C 240 285, 400 285, 420 260 C 435 240, 430 205, 410 180 C 380 140, 260 140, 230 180 Z" />
+                    <path d="M 250 145 C 270 125, 370 125, 390 145 C 410 165, 390 185, 320 185 C 250 185, 230 165, 250 145 Z" />
+                    <path d="M 215 280 L 245 425 C 248 438, 262 448, 278 448 L 362 448 C 378 448, 392 438, 395 425 L 425 280 Z" />
+                    <path d="M 260 300 L 272 425" stroke="var(--pink-bg)" stroke-width="12" stroke-linecap="round" />
+                    <path d="M 320 300 L 320 425" stroke="var(--pink-bg)" stroke-width="12" stroke-linecap="round" />
+                    <path d="M 380 300 L 368 425" stroke="var(--pink-bg)" stroke-width="12" stroke-linecap="round" />
+                </svg>
+
+                <h2 class="login-title">login:</h2>
+<div class="input-group">
+    <label>Email:</label>
+    <input type="email" id="login-email" class="input-field" placeholder="Digite seu e-mail">
+</div>
+<div class="input-group">
+    <label>Senha:</label>
+    <input type="password" id="login-senha" class="input-field" placeholder="Digite sua senha">
+</div>
+                <button class="btn-action" onclick="fazerLogin()">Entrar</button>
+                <p style="text-align: center; color: white; font-size: 0.95rem; font-weight: 600; margin-top: 20px; cursor: pointer; position: relative; z-index: 10;" onclick="navegarPara('cadastro')">
+                    Criar nova conta
+                </p>
+            </div>
+
+            <!-- TELA 2: CADASTRO COM MÍNIMO DE SENHA -->
+            <div id="screen-cadastro" style="display: none;">
+                <h3 style="color: white; margin-top: 0; text-align: center;">Criar Conta</h3>
+                <div class="input-group">
+                    <label>Nome Completo *</label>
+                    <input type="text" id="cad-nome" class="input-field" placeholder="Seu nome">
+                </div>
+                <div class="input-group">
+                    <label>CPF (11 dígitos) *</label>
+                    <input type="text" id="cad-cpf" class="input-field" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)">
+                </div>
+                <div class="input-group">
+                    <label>E-mail *</label>
+                    <input type="email" id="cad-email" class="input-field" placeholder="seu@email.com">
+                </div>
+                <div class="input-group">
+                    <label>Senha (mínimo 6 caracteres) *</label>
+                    <input type="password" id="cad-senha" class="input-field" placeholder="Crie uma senha forte">
+                </div>
+                <div class="input-group">
+                    <label>Telefone / Celular *</label>
+                    <input type="text" id="cad-telefone" class="input-field" placeholder="(41) 99999-9999" maxlength="15" oninput="mascaraTelefone(this)">
+                </div>
+                
+                <h4 style="color: white; margin: 10px 0 5px 0;">Endereço de Entrega:</h4>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="cad-rua" class="input-field" placeholder="Rua *" style="flex: 2;">
+                    <input type="text" id="cad-numero" class="input-field" placeholder="Nº *" style="flex: 1;">
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <input type="text" id="cad-complemento" class="input-field" placeholder="Apto/Bloco" style="flex: 1;">
+                    <input type="text" id="cad-bairro" class="input-field" placeholder="Bairro *" style="flex: 1;">
+                </div>
+
+                <button class="btn-action" style="margin-top: 15px;" onclick="fazerCadastro()">Cadastrar e Entrar</button>
+            </div>
+
+            <!-- TELA 3: VITRINE -->
+            <div id="screen-vitrine" style="display: none;">
+                <div class="categories-bar" id="categorias-bar">
+                    <div class="category-chip active" onclick="filtrarCategoria('Todas', this)">Todas</div>
+                    <div class="category-chip" onclick="filtrarCategoria('Tradicionais', this)">Tradicionais</div>
+                    <div class="category-chip" onclick="filtrarCategoria('Especiais', this)">Especiais</div>
+                    <div class="category-chip" onclick="filtrarCategoria('Bebidas', this)">Bebidas</div>
+                </div>
+
+                <h4 style="color: white; margin: 0 0 8px 0;">Mais Pedidos 🔥</h4>
+                <div class="horizontal-scroll" id="destaques-container"></div>
+
+                <h4 style="color: white; margin: 10px 0 8px 0;">Cardápio Completo</h4>
+                <div id="lista-produtos"></div>
+
+                <button class="btn-action" style="background: white; color: var(--pink-bg); margin-top: 15px;" onclick="abrirCarrinhoECheckout()">
+                    🛒 Ver Carrinho (<span id="cart-count">0</span>)
+                </button>
+            </div>
+
+            <!-- TELA 4: DETALHES DO PRODUTO -->
+            <div id="screen-detalhes" style="display: none; height: 100%; flex-direction: column;">
+                <div style="text-align: center; flex: 1; display: flex; align-items: center; justify-content: center;">
+                    <div class="image-frame-container">
+                        <img id="det-img" src="" onerror="this.src='https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200'">
+                    </div>
+                </div>
+                <div style="background: white; border-radius: 24px 24px 0 0; padding: 20px; margin-top: auto;">
+                    <h2 id="det-nome" style="margin: 0; color: var(--pink-bg);"></h2>
+                    <p id="det-preco" class="product-price" style="font-size: 1.3rem; margin: 5px 0;"></p>
+                    <p id="det-desc" style="color: #666; font-size: 0.85rem; line-height: 1.4; margin-bottom: 15px;"></p>
+                    
+                    <div class="qty-selector">
+                        <span style="font-size: 0.9rem; font-weight: 600; color: #555;">Quantidade:</span>
+                        <button class="btn-qty" onclick="alterarQtd(-1)">-</button>
+                        <span class="qty-number" id="det-qtd">1</span>
+                        <button class="btn-qty" onclick="alterarQtd(1)">+</button>
+                    </div>
+
+                    <button class="btn-action" style="background: var(--pink-bg); color: white;" onclick="adicionarEContinuar()">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+
+            <!-- TELA 5: MINHA CONTA COM EDIÇÃO DE DADOS PESSOAIS -->
+            <div id="screen-config" style="display: none;">
+                <h3 style="color: white; margin-top: 0; text-align: center;">Minha Conta</h3>
+                
+                <div style="background: white; border-radius: 20px; padding: 16px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: var(--pink-bg);">Dados Pessoais</h4>
+                        <button style="background: none; border: none; color: var(--pink-bg); font-weight: bold; font-size: 0.75rem; cursor: pointer;" onclick="toggleEditarDadosPessoais()">✏️ Editar</button>
+                    </div>
+                    
+                    <div id="view-dados-pessoais">
+                        <p style="margin: 3px 0; font-size: 0.9rem;"><strong>Nome:</strong> <span id="cfg-nome"></span></p>
+                        <p style="margin: 3px 0; font-size: 0.9rem;"><strong>CPF:</strong> <span id="cfg-cpf"></span></p>
+                        <p style="margin: 3px 0; font-size: 0.9rem;"><strong>E-mail:</strong> <span id="cfg-email"></span></p>
+                        <p style="margin: 3px 0; font-size: 0.9rem;"><strong>Telefone:</strong> <span id="cfg-telefone"></span></p>
+                    </div>
+
+                    <div id="form-editar-dados-pessoais" style="display: none; margin-top: 10px;">
+                        <input type="text" id="edit-nome" class="input-field" placeholder="Nome Completo" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <input type="text" id="edit-cpf" class="input-field" placeholder="CPF" maxlength="14" oninput="mascaraCPF(this)" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <input type="email" id="edit-email" class="input-field" placeholder="E-mail" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <input type="text" id="edit-telefone" class="input-field" placeholder="Telefone" maxlength="15" oninput="mascaraTelefone(this)" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <button class="btn-action" style="background: var(--pink-bg); color: white; padding: 8px; font-size: 0.85rem;" onclick="salvarDadosPessoais()">Salvar Alterações</button>
+                    </div>
+                </div>
+
+                <div style="background: white; border-radius: 20px; padding: 16px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--pink-bg);">Endereços Salvos</h4>
+                    <div id="cfg-lista-enderecos"></div>
+                    
+                    <button class="btn-action" id="btn-toggle-end" style="background: var(--pink-bg); color: white; padding: 10px; font-size: 0.85rem; margin-top: 10px;" onclick="toggleNovoEnderecoConfig()">+ Cadastrar Novo Endereço</button>
+                    
+                    <div id="form-novo-end-config" style="display: none; margin-top: 10px;">
+                        <input type="text" id="cfg-end-rua" class="input-field" placeholder="Rua *" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <div style="display: flex; gap: 5px; margin-bottom: 5px;">
+                            <input type="text" id="cfg-end-num" class="input-field" placeholder="Número *" style="border: 1px solid #ddd; flex: 1;">
+                            <input type="text" id="cfg-end-comp" class="input-field" placeholder="Apto/Bloco" style="border: 1px solid #ddd; flex: 1;">
+                        </div>
+                        <input type="text" id="cfg-end-bairro" class="input-field" placeholder="Bairro *" style="border: 1px solid #ddd; margin-bottom: 5px;">
+                        <button class="btn-action" style="background: var(--pink-bg); color: white; padding: 8px; font-size: 0.85rem;" onclick="salvarEnderecoPelasConfiguracoes()">Salvar Endereço</button>
+                    </div>
+                </div>
+
+                <button class="btn-action" style="margin-top: 20px; background: rgba(0,0,0,0.2);" onclick="sairConta()">Sair da Conta</button>
+            </div>
+
+            <!-- TELA 6: CARRINHO E CHECKOUT -->
+            <div id="screen-carrinho" style="display: none;">
+                <h3 style="color: white; margin-top: 0;">Revisão do Pedido</h3>
+                
+                <div id="carrinho-itens"></div>
+
+                <div style="background: white; border-radius: 18px; padding: 14px; margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <h4 style="margin: 0; color: var(--pink-bg);">📍 Endereço de Entrega</h4>
+                        <button style="background: none; border: none; color: var(--pink-bg); font-weight: bold; font-size: 0.75rem; cursor: pointer;" onclick="abrirConfiguracoes()">+ / Editar</button>
+                    </div>
+                    <select id="select-enderecos" class="input-field" style="border: 1px solid #ddd; background: #fff; color: #333;"></select>
+                </div>
+
+                <div style="background: white; border-radius: 18px; padding: 14px; margin-top: 12px;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--pink-bg);">💳 Forma de Pagamento</h4>
+                    <div class="payment-options">
+                        <div class="payment-chip active" id="pay-PIX" onclick="selecionarPagamento('PIX')">PIX</div>
+                        <div class="payment-chip" id="pay-Credito" onclick="selecionarPagamento('Credito')">Crédito</div>
+                        <div class="payment-chip" id="pay-Debito" onclick="selecionarPagamento('Debito')">Débito</div>
+                    </div>
+
+                    <div id="card-fields-container" style="display: none; margin-top: 12px; border-top: 1px solid #EEE; padding-top: 10px;">
+                        <input type="text" id="card-number" class="input-field" placeholder="Número do Cartão" style="border: 1px solid #DDD; margin-bottom: 6px; font-size: 0.85rem;" value="4532 1122 3344 5566">
+                        <div style="display: flex; gap: 6px;">
+                            <input type="text" id="card-expiry" class="input-field" placeholder="MM/AA" style="border: 1px solid #DDD; font-size: 0.85rem; flex: 1;" value="12/28">
+                            <input type="text" id="card-cvv" class="input-field" placeholder="CVV" style="border: 1px solid #DDD; font-size: 0.85rem; flex: 1;" value="123">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: white; border-radius: 18px; padding: 14px; margin-top: 12px;">
+                    <h4 style="margin: 0 0 8px 0; color: var(--pink-bg);">Resumo de Valores</h4>
+                    <p style="margin: 4px 0; font-size: 0.9rem;">Subtotal: <strong id="cart-subtotal" style="color: #555;">R$ 0,00</strong></p>
+                    <p style="margin: 4px 0; font-size: 0.9rem;">Taxa de Entrega: <strong>R$ 5,00</strong></p>
+                    <p style="margin: 6px 0 0 0; font-size: 1.1rem; border-top: 1px solid #eee; padding-top: 6px;">Total: <strong id="cart-total" style="color: var(--accent-pink);">R$ 0,00</strong></p>
+                </div>
+
+                <button class="btn-action" id="btn-finalizar-checkout" style="background: white; color: var(--pink-bg); margin-top: 15px;" onclick="finalizarPedido()">Confirmar e Pagar (PIX)</button>
+            </div>
+
+            <!-- TELA 7: RASTREIO -->
+            <div id="screen-rastreio" style="display: none;">
+                <div style="text-align: center; color: white;">
+                    <div style="font-size: 2.8rem;">🎉</div>
+                    <h2 style="margin: 5px 0;">Pedido Confirmado!</h2>
+                    <p style="font-size: 0.85rem; opacity: 0.9;">Número do Pedido: #<span id="st-pedido-id"></span></p>
+                </div>
+
+                <div class="timeline">
+                    <div class="step active">
+                        <div class="step-icon">✓</div>
+                        <div><strong>Pedido Recebido</strong><br><small>Aguardando confirmação.</small></div>
+                    </div>
+                    <div class="step active">
+                        <div class="step-icon">🧁</div>
+                        <div><strong>Em Preparo</strong><br><small>Seus cupcakes estão sendo assados.</small></div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">🛵</div>
+                        <div><strong>Saiu para Entrega</strong><br><small>Motoboy a caminho.</small></div>
+                    </div>
+                </div>
+
+                <button class="btn-action" style="margin-top: 15px;" onclick="voltarParaVitrine()">Voltar ao Cardápio</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuarioLogado = null;
+        let produtos = [];
+        let carrinho = [];
+        let produtoSelecionado = null;
+        let quantidadeSelecionada = 1;
+        let enderecoEmEdicaoId = null;
+        let metodoPagamentoSelecionado = 'PIX';
+
+        function mascaraCPF(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            input.value = v;
+        }
+
+        function mascaraTelefone(input) {
+            let v = input.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+            v = v.replace(/(\d)(\d{4})$/, '$1-$2');
+            input.value = v;
+        }
+
+        function abrirModal(titulo, msg, icone = '🧁') {
+            document.getElementById('modal-icon').innerText = icone;
+            document.getElementById('modal-title').innerText = titulo;
+            document.getElementById('modal-msg').innerText = msg;
+            document.getElementById('app-modal').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('app-modal').style.display = 'none';
+        }
+
+        function navegarPara(tela) {
+            ['login', 'cadastro', 'vitrine', 'detalhes', 'config', 'carrinho', 'rastreio'].forEach(t => {
+                document.getElementById(`screen-${t}`).style.display = 'none';
+            });
+
+            document.getElementById(`screen-${tela}`).style.display = (tela === 'login') ? 'flex' : (tela === 'detalhes' ? 'flex' : 'block');
+            
+            document.getElementById('btn-back').style.display = (tela !== 'login' && tela !== 'vitrine') ? 'block' : 'none';
+            document.getElementById('btn-menu').style.display = (tela === 'vitrine') ? 'block' : 'none';
+            document.getElementById('btn-cart-header').style.display = (tela === 'vitrine') ? 'block' : 'none';
+            document.getElementById('header-spacer').style.display = (tela === 'vitrine') ? 'none' : 'block';
+        }
+
+        function voltarNavegacao() {
+            if (usuarioLogado) voltarParaVitrine();
+            else navegarPara('login');
+        }
+
+        function voltarParaVitrine() {
+            if (!usuarioLogado) { navegarPara('login'); return; }
+            carregarVitrine();
+            navegarPara('vitrine');
+        }
+
+        async function fazerLogin() {
+            const email = document.getElementById('login-email').value;
+            const senha = document.getElementById('login-senha').value;
+
+            if (!email || !senha) return abrirModal('Atenção', 'Informe seu e-mail e senha para entrar.', '⚠️');
+
+            try {
+                const res = await fetch('http://192.168.3.16:3000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    usuarioLogado = data.usuario;
+                    await carregarEnderecos();
+                    await carregarVitrine();
+                    navegarPara('vitrine');
+                    abrirModal('Bem-vindo!', `Olá, ${usuarioLogado.nome}! Faça seus pedidos.`, '✨');
+                } else {
+                    abrirModal('Erro', data.error, '❌');
+                }
+            } catch (e) {
+                abrirModal('Erro', 'Servidor off-line ou erro na conexão.', '⚠️');
+            }
+        }
+
+        async function fazerCadastro() {
+            const nome = document.getElementById('cad-nome').value.trim();
+            const cpf = document.getElementById('cad-cpf').value.trim();
+            const email = document.getElementById('cad-email').value.trim();
+            const senha = document.getElementById('cad-senha').value.trim();
+            const telefone = document.getElementById('cad-telefone').value.trim();
+            const rua = document.getElementById('cad-rua').value.trim();
+            const numero = document.getElementById('cad-numero').value.trim();
+            const complemento = document.getElementById('cad-complemento').value.trim();
+            const bairro = document.getElementById('cad-bairro').value.trim();
+
+            if (!nome) return abrirModal('Campo Obrigatório', 'Por favor, preencha o seu Nome Completo.', '⚠️');
+            if (!cpf) return abrirModal('Campo Obrigatório', 'Por favor, informe o seu CPF.', '⚠️');
+            if (!email) return abrirModal('Campo Obrigatório', 'Por favor, informe um E-mail válido.', '⚠️');
+            if (!senha) return abrirModal('Campo Obrigatório', 'Por favor, crie uma Senha para sua conta.', '⚠️');
+            if (senha.length < 6) return abrirModal('Senha Curta', 'A senha deve conter no mínimo 6 caracteres.', '⚠️');
+            if (!telefone) return abrirModal('Campo Obrigatório', 'Por favor, informe seu número de Telefone.', '⚠️');
+            if (!rua || !numero || !bairro) return abrirModal('Endereço Incompleto', 'Preencha a Rua, Número e Bairro de entrega.', '📍');
+
+            const cpfDigitos = cpf.replace(/\D/g, '');
+            const telDigitos = telefone.replace(/\D/g, '');
+
+            if (cpfDigitos.length !== 11) {
+                return abrirModal('CPF Inválido', 'O CPF deve conter exatamente 11 dígitos numéricos.', '⚠️');
+            }
+
+            if (telDigitos.length < 10 || telDigitos.length > 11) {
+                return abrirModal('Telefone Inválido', 'O Telefone deve conter 10 ou 11 números incluindo o DDD.', '⚠️');
+            }
+
+            const payload = { nome, cpf, email, senha, telefone, rua, numero, complemento, bairro };
+
+            try {
+                const res = await fetch('http://192.168.3.16:3000/api/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    usuarioLogado = data.usuario;
+                    await carregarEnderecos();
+                    await carregarVitrine();
+                    navegarPara('vitrine');
+                    abrirModal('Conta Criada!', 'Seu cadastro foi realizado com sucesso.', '🎉');
+                } else {
+                    abrirModal('Atenção', data.error, '⚠️');
+                }
+            } catch (e) {
+                abrirModal('Erro', 'Erro ao conectar ao servidor para cadastro.', '❌');
+            }
+        }
+
+        async function carregarEnderecos() {
+            if (!usuarioLogado) return;
+            const res = await fetch(`http://192.168.3.16:3000/api/enderecos/${usuarioLogado.idCliente}`);
+            const enderecos = await res.json();
+
+            const select = document.getElementById('select-enderecos');
+            const listaConfig = document.getElementById('cfg-lista-enderecos');
+            select.innerHTML = '';
+            listaConfig.innerHTML = '';
+
+            enderecos.forEach(e => {
+                const compText = e.complemento ? ` (${e.complemento})` : '';
+                select.innerHTML += `<option value="${e.idEndereco}">${e.rua}, ${e.numero}${compText} - ${e.bairro}</option>`;
+                listaConfig.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding: 6px 0;">
+                        <span style="font-size:0.85rem; color:#444;">📍 ${e.rua}, ${e.numero}${compText} - ${e.bairro}</span>
+                        <div style="display:flex; gap:6px;">
+                            <button style="border:none; background:none; cursor:pointer;" onclick="prepararEdicaoEndereco(${e.idEndereco}, '${e.rua}', '${e.numero}', '${e.complemento || ''}', '${e.bairro}')">✏️</button>
+                            <button style="border:none; background:none; cursor:pointer;" onclick="excluirEndereco(${e.idEndereco})">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirConfiguracoes() {
+            document.getElementById('cfg-nome').innerText = usuarioLogado.nome;
+            
+            const c = usuarioLogado.cpf || '';
+            const cpfFmt = (c.length === 11) ? c.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') : c;
+            document.getElementById('cfg-cpf').innerText = cpfFmt || 'Não informado';
+            
+            document.getElementById('cfg-email').innerText = usuarioLogado.email;
+            
+            const t = usuarioLogado.telefone || '';
+            const telFmt = (t.length === 11) ? t.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3') : t;
+            document.getElementById('cfg-telefone').innerText = telFmt || 'Não informado';
+
+            document.getElementById('view-dados-pessoais').style.display = 'block';
+            document.getElementById('form-editar-dados-pessoais').style.display = 'none';
+
+            carregarEnderecos();
+            navegarPara('config');
+        }
+
+        function toggleEditarDadosPessoais() {
+            const form = document.getElementById('form-editar-dados-pessoais');
+            const view = document.getElementById('view-dados-pessoais');
+
+            if (form.style.display === 'none') {
+                document.getElementById('edit-nome').value = usuarioLogado.nome;
+                document.getElementById('edit-cpf').value = usuarioLogado.cpf || '';
+                document.getElementById('edit-email').value = usuarioLogado.email;
+                document.getElementById('edit-telefone').value = usuarioLogado.telefone || '';
+                
+                // Aplica máscaras nos dados ao carregar formulário
+                mascaraCPF(document.getElementById('edit-cpf'));
+                mascaraTelefone(document.getElementById('edit-telefone'));
+
+                form.style.display = 'block';
+                view.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                view.style.display = 'block';
+            }
+        }
+
+        async function salvarDadosPessoais() {
+            const nome = document.getElementById('edit-nome').value.trim();
+            const cpf = document.getElementById('edit-cpf').value.trim();
+            const email = document.getElementById('edit-email').value.trim();
+            const telefone = document.getElementById('edit-telefone').value.trim();
+
+            if (!nome || !email || !cpf) return abrirModal('Campos Obrigatórios', 'Preencha Nome, CPF e E-mail.', '⚠️');
+
+            const payload = { nome, cpf, email, telefone };
+
+            try {
+                const res = await fetch(`http://192.168.3.16:3000/api/cliente/${usuarioLogado.idCliente}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    usuarioLogado.nome = nome;
+                    usuarioLogado.email = email;
+                    usuarioLogado.cpf = cpf.replace(/\D/g, '');
+                    usuarioLogado.telefone = telefone.replace(/\D/g, '');
+
+                    abrirConfiguracoes();
+                    abrirModal('Sucesso!', 'Dados pessoais atualizados com sucesso.', '✨');
+                } else {
+                    abrirModal('Erro', data.error, '❌');
+                }
+            } catch (e) {
+                abrirModal('Erro', 'Não foi possível atualizar os dados pessoais.', '❌');
+            }
+        }
+
+        function toggleNovoEnderecoConfig() {
+            enderecoEmEdicaoId = null;
+            document.getElementById('cfg-end-rua').value = '';
+            document.getElementById('cfg-end-num').value = '';
+            document.getElementById('cfg-end-comp').value = '';
+            document.getElementById('cfg-end-bairro').value = '';
+            document.getElementById('btn-toggle-end').innerText = '+ Cadastrar Novo Endereço';
+            const form = document.getElementById('form-novo-end-config');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function prepararEdicaoEndereco(id, rua, numero, complemento, bairro) {
+            enderecoEmEdicaoId = id;
+            document.getElementById('cfg-end-rua').value = rua;
+            document.getElementById('cfg-end-num').value = numero;
+            document.getElementById('cfg-end-comp').value = complemento;
+            document.getElementById('cfg-end-bairro').value = bairro;
+            document.getElementById('form-novo-end-config').style.display = 'block';
+            document.getElementById('btn-toggle-end').innerText = 'Cancelar Edição';
+        }
+
+        async function salvarEnderecoPelasConfiguracoes() {
+            const rua = document.getElementById('cfg-end-rua').value.trim();
+            const numero = document.getElementById('cfg-end-num').value.trim();
+            const complemento = document.getElementById('cfg-end-comp').value.trim();
+            const bairro = document.getElementById('cfg-end-bairro').value.trim();
+
+            if (!rua) return abrirModal('Campo Obrigatório', 'Preencha o nome da Rua.', '⚠️');
+            if (!numero) return abrirModal('Campo Obrigatório', 'Preencha o Número do imóvel.', '⚠️');
+            if (!bairro) return abrirModal('Campo Obrigatório', 'Preencha o Bairro.', '⚠️');
+
+            const isEdit = enderecoEmEdicaoId !== null;
+            const url = isEdit ? `http://192.168.3.16:3000/api/enderecos/${enderecoEmEdicaoId}` : 'http://192.168.3.16:3000/api/enderecos';
+            const method = isEdit ? 'PUT' : 'POST';
+            
+            const payload = { idCliente: usuarioLogado.idCliente, rua, numero, complemento, bairro, cidade: 'Curitiba', estado: 'PR', cep: '80000-000' };
+
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                await carregarEnderecos();
+                toggleNovoEnderecoConfig();
+                abrirModal('Sucesso', isEdit ? 'Endereço atualizado!' : 'Novo endereço salvo!', '📍');
+            }
+        }
+
+        async function excluirEndereco(idEndereco) {
+            const res = await fetch(`http://192.168.3.16:3000/api/enderecos/${idEndereco}`, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.success) {
+                await carregarEnderecos();
+                abrirModal('Excluído', 'Endereço removido com sucesso.', '🗑️');
+            }
+        }
+
+        function selecionarPagamento(tipo) {
+            metodoPagamentoSelecionado = tipo;
+            ['PIX', 'Credito', 'Debito'].forEach(t => {
+                document.getElementById(`pay-${t}`).classList.remove('active');
+            });
+            document.getElementById(`pay-${tipo}`).classList.add('active');
+
+            const cardFields = document.getElementById('card-fields-container');
+            const btn = document.getElementById('btn-finalizar-checkout');
+
+            if (tipo === 'PIX') {
+                cardFields.style.display = 'none';
+                btn.innerText = 'Confirmar e Pagar (PIX)';
+            } else if (tipo === 'Credito') {
+                cardFields.style.display = 'block';
+                btn.innerText = 'Confirmar e Pagar (Cartão de Crédito)';
+            } else {
+                cardFields.style.display = 'block';
+                btn.innerText = 'Confirmar e Pagar (Cartão de Débito)';
+            }
+        }
+
+        function sairConta() {
+            usuarioLogado = null;
+            carrinho = [];
+            atualizarContadorCarrinho();
+            navegarPara('login');
+        }
+
+        async function carregarVitrine() {
+            const res = await fetch('http://192.168.3.16:3000/api/produtos');
+            produtos = await res.json();
+            renderizarProdutos(produtos);
+        }
+
+        function renderizarProdutos(lista) {
+            const containerVert = document.getElementById('lista-produtos');
+            const containerHoriz = document.getElementById('destaques-container');
+            containerVert.innerHTML = '';
+            containerHoriz.innerHTML = '';
+
+            lista.slice(0, 3).forEach(p => {
+                containerHoriz.innerHTML += `
+                    <div class="card-highlight" onclick="verDetalhes(${p.idProduto})">
+                        <img src="http://192.168.3.16:3000/public/images/${p.imagemUrl}" onerror="this.src='https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200'">
+                        <h5 style="margin: 4px 0; font-size: 0.8rem; color: #444;">${p.nome}</h5>
+                        <span class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</span>
+                    </div>
+                `;
+            });
+
+            lista.forEach(p => {
+                containerVert.innerHTML += `
+                    <div class="product-card" onclick="verDetalhes(${p.idProduto})">
+                        <div class="product-card-left">
+                            <img src="http://192.168.3.16:3000/public/images/${p.imagemUrl}" onerror="this.src='https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200'">
+                            <div class="product-info">
+                                <h4>${p.nome}</h4>
+                                <span class="product-price">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</span>
+                            </div>
+                        </div>
+                        <button class="btn-mini-add" onclick="event.stopPropagation(); adicionarDireto(${p.idProduto})">+</button>
+                    </div>
+                `;
+            });
+        }
+
+        function filtrarCategoria(cat, element) {
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+
+            if (cat === 'Todas') renderizarProdutos(produtos);
+            else renderizarProdutos(produtos.filter(p => p.categoriaNome === cat));
+        }
+
+        function verDetalhes(id) {
+            produtoSelecionado = produtos.find(p => p.idProduto === id);
+            quantidadeSelecionada = 1;
+            document.getElementById('det-qtd').innerText = quantidadeSelecionada;
+            document.getElementById('det-img').src = `http://192.168.3.16:3000/public/images/${produtoSelecionado.imagemUrl}`;
+            document.getElementById('det-nome').innerText = produtoSelecionado.nome;
+            document.getElementById('det-preco').innerText = `R$ ${parseFloat(produtoSelecionado.preco).toFixed(2).replace('.', ',')}`;
+            document.getElementById('det-desc').innerText = produtoSelecionado.descricao;
+            navegarPara('detalhes');
+        }
+
+        function alterarQtd(delta) {
+            quantidadeSelecionada += delta;
+            if (quantidadeSelecionada < 1) quantidadeSelecionada = 1;
+            document.getElementById('det-qtd').innerText = quantidadeSelecionada;
+        }
+
+        function adicionarAoEstadoCarrinho(prod, qtd = 1) {
+            const itemExistente = carrinho.find(i => i.produto.idProduto === prod.idProduto);
+            if (itemExistente) {
+                itemExistente.quantidade += qtd;
+            } else {
+                carrinho.push({ produto: prod, quantidade: qtd });
+            }
+            atualizarContadorCarrinho();
+        }
+
+        function adicionarDireto(id) {
+            const p = produtos.find(item => item.idProduto === id);
+            adicionarAoEstadoCarrinho(p, 1);
+            abrirModal('Adicionado!', `${p.nome} adicionado ao carrinho.`, '🛒');
+        }
+
+        function adicionarEContinuar() {
+            adicionarAoEstadoCarrinho(produtoSelecionado, quantidadeSelecionada);
+            voltarParaVitrine();
+            abrirModal('Adicionado!', `${quantidadeSelecionada}x ${produtoSelecionado.nome} no carrinho!`, '🛒');
+        }
+
+        function atualizarContadorCarrinho() {
+            const totalItens = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+            document.getElementById('cart-count').innerText = totalItens;
+            document.getElementById('cart-count-badge').innerText = totalItens;
+        }
+
+        function abrirCarrinhoECheckout() {
+            atualizarCarrinhoScreen();
+            navegarPara('carrinho');
+        }
+
+        function atualizarCarrinhoScreen() {
+            const container = document.getElementById('carrinho-itens');
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            if (carrinho.length === 0) {
+                container.innerHTML = '<p style="color: white; text-align: center;">Seu carrinho está vazio.</p>';
+            } else {
+                carrinho.forEach((item, index) => {
+                    const precoUnitario = parseFloat(item.produto.preco);
+                    const subtotalItem = precoUnitario * item.quantidade;
+                    subtotal += subtotalItem;
+
+                    container.innerHTML += `
+                        <div class="product-card" style="margin-bottom: 8px;">
+                            <div class="product-card-left">
+                                <img src="http://192.168.3.16:3000/public/images/${item.produto.imagemUrl}" style="width:45px; height:45px;" onerror="this.src='https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200'">
+                                <div class="product-info">
+                                    <h4 style="margin:0;">${item.quantidade}x ${item.produto.nome}</h4>
+                                    <span class="product-price">R$ ${subtotalItem.toFixed(2).replace('.', ',')}</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <button class="btn-qty" style="width:26px; height:26px; font-size:0.9rem;" onclick="alterarQtdCarrinho(${index}, -1)">-</button>
+                                <span class="qty-number" style="font-size:0.9rem;">${item.quantidade}</span>
+                                <button class="btn-qty" style="width:26px; height:26px; font-size:0.9rem;" onclick="alterarQtdCarrinho(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const total = subtotal > 0 ? subtotal + 5.00 : 0;
+            document.getElementById('cart-subtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function alterarQtdCarrinho(index, delta) {
+            carrinho[index].quantidade += delta;
+            if (carrinho[index].quantidade <= 0) {
+                carrinho.splice(index, 1);
+            }
+            atualizarContadorCarrinho();
+            atualizarCarrinhoScreen();
+        }
+
+        async function finalizarPedido() {
+            if (carrinho.length === 0) return abrirModal('Carrinho Vazio', 'Adicione cupcakes antes de pagar.', '⚠️');
+
+            const selectEnd = document.getElementById('select-enderecos');
+            const idEnd = selectEnd.value;
+
+            if (!idEnd) return abrirModal('Sem Endereço', 'Cadastre ao menos um endereço para entrega.', '📍');
+
+            let ultimosDigitos = null;
+            if (metodoPagamentoSelecionado !== 'PIX') {
+                const numCard = document.getElementById('card-number').value.trim();
+                const expCard = document.getElementById('card-expiry').value.trim();
+                const cvvCard = document.getElementById('card-cvv').value.trim();
+
+                if (!numCard || !expCard || !cvvCard) {
+                    return abrirModal('Dados Incompletos', 'Preencha os dados do cartão para continuar.', '💳');
+                }
+                const numLimpo = numCard.replace(/\s+/g, '');
+                ultimosDigitos = numLimpo.slice(-4);
+            }
+
+            const subtotal = carrinho.reduce((acc, item) => acc + (parseFloat(item.produto.preco) * item.quantidade), 0);
+            
+            const itensPayload = [];
+            carrinho.forEach(item => {
+                for (let i = 0; i < item.quantidade; i++) {
+                    itensPayload.push({
+                        idProduto: item.produto.idProduto,
+                        quantidade: 1,
+                        preco: parseFloat(item.produto.preco)
+                    });
+                }
+            });
+
+            const payload = {
+                idCliente: usuarioLogado.idCliente,
+                idEndereco: idEnd,
+                subtotal: subtotal,
+                taxaEntrega: 5.00,
+                valorTotal: subtotal + 5.00,
+                metodoPagamento: metodoPagamentoSelecionado,
+                ultimosDigitos: ultimosDigitos,
+                itens: itensPayload
+            };
+
+            try {
+                const res = await fetch('http://192.168.3.16:3000/api/pedidos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    carrinho = [];
+                    atualizarContadorCarrinho();
+                    document.getElementById('st-pedido-id').innerText = data.idPedido;
+                    navegarPara('rastreio');
+                    abrirModal('Sucesso!', 'Seu pedido foi recebido com sucesso e já está sendo preparado!', '🎉');
+                } else {
+                    abrirModal('Erro', data.error || 'Erro ao processar o pagamento.', '❌');
+                }
+            } catch (e) {
+                abrirModal('Erro', 'Não foi possível finalizar o pedido.', '❌');
+            }
+        }
+    </script>
+</body>
+</html>
